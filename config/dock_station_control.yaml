@@ -1,0 +1,26 @@
+# Dock Station Controller Configuration
+# Controls the revolute (hinge) joints for the dock lids
+
+dock_station:
+  # Publish all joint states at 50 Hz
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  # Position controller for kapak1j (Lid 1)
+  kapak1j_position_controller:
+    type: position_controllers/JointPositionController
+    joint: kapak1j
+    pid: {p: 10.0, i: 0.01, d: 5.0}
+
+  # Position controller for kapak2j (Lid 2)
+  kapak2j_position_controller:
+    type: position_controllers/JointPositionController
+    joint: kapak2j
+    pid: {p: 10.0, i: 0.01, d: 5.0}
+
+  # Position controller for ruzgar_hizj (Wind speed indicator)
+  ruzgar_hizj_position_controller:
+    type: position_controllers/JointPositionController
+    joint: ruzgar_hizj
+    pid: {p: 1.0, i: 0.0, d: 0.1}

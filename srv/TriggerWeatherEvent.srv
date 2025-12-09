@@ -1,0 +1,8 @@
+# Trigger specific weather scenarios
+# Supported event types: "rain", "storm", "calm", "heatwave", "cold_front"
+string event_type        # Type of weather event to trigger
+float32 duration         # Duration in seconds (0 = instant change)
+---
+bool success
+string message
+string event_id          # Unique ID for this event

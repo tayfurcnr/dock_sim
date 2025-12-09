@@ -1,0 +1,94 @@
+ros:
+  enabled: true  # Set to false to run in demo mode without ROS
+  
+  topics:
+    lid:
+      topic: "/dock/rx/devices/telemetry/lid"
+      msg_type: "dock_msgs/Lid"
+    weather_env:
+      topic: "/dock/rx/devices/telemetry/weather/env"
+      msg_type: "dock_msgs/WeatherEnv"
+    weather_wind:
+      topic: "/dock/rx/devices/telemetry/weather/wind"
+      msg_type: "dock_msgs/WeatherWind"
+    weather_rain:
+      topic: "/dock/rx/devices/telemetry/weather/rain"
+      msg_type: "dock_msgs/WeatherRain"
+    location:
+      topic: "/dock/rx/devices/telemetry/location"
+      msg_type: "dock_msgs/Location"
+    system_error:
+      topic: "/dock/rx/devices/telemetry/system/error"
+      msg_type: "dock_msgs/SystemError"
+    system_network:
+      topic: "/dock/rx/devices/telemetry/system/network"
+      msg_type: "dock_msgs/SystemNetwork"
+    charger:
+      topic: "/dock/rx/devices/telemetry/charger"
+      msg_type: "dock_msgs/Charger"
+  
+  services:
+    gazebo_temperature:
+      service: "/gazebo/set_temperature"
+      srv_type: "std_srvs/SetFloat"
+    gazebo_humidity:
+      service: "/gazebo/set_humidity"
+      srv_type: "std_srvs/SetFloat"
+    gazebo_pressure:
+      service: "/gazebo/set_pressure"
+      srv_type: "std_srvs/SetFloat"
+    gazebo_wind_speed:
+      service: "/gazebo/set_wind_speed"
+      srv_type: "std_srvs/SetFloat"
+    gazebo_rain_rate:
+      service: "/gazebo/set_rain_rate"
+      srv_type: "std_srvs/SetFloat"
+
+  actions:
+    lid_control:
+      server: "/dock/lid_control"
+      action_type: "dock_msgs/LidControlAction"
+      action_path: "dock_msgs/action/control/LidControl.action"
+  button_actions:
+    LID_OPEN:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 1  # DOCK_LID_OPEN
+        params: ""
+    LID_CLOSE:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 0  # DOCK_LID_CLOSE
+        params: ""
+    LID_STOP:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 2  # DOCK_LID_STOP
+        params: ""
+    MANUAL_OPEN:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 1  # DOCK_LID_OPEN
+        params: ""
+    MANUAL_OPEN_RELEASED:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 2  # DOCK_LID_STOP
+        params: ""
+    MANUAL_CLOSE:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 0  # DOCK_LID_CLOSE
+        params: ""
+    MANUAL_CLOSE_RELEASED:
+      type: "action"
+      action: "lid_control"
+      goal:
+        command: 2  # DOCK_LID_STOP
+        params: ""

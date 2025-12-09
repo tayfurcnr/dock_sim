@@ -1,0 +1,7 @@
+# Set wind parameters
+# Use -1 for any parameter to indicate "no change"
+float32 speed            # Wind speed (m/s), -1 = no change
+float32 direction        # Wind direction (degrees), -1 = no change
+---
+bool success
+string message

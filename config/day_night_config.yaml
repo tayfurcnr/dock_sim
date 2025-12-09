@@ -1,0 +1,36 @@
+# Day/Night Cycle Configuration
+# Controls the day/night cycle simulator parameters
+
+day_night_cycle:
+  # Cycle duration in seconds (default: 600s = 10 minutes)
+  cycle_duration: 600.0
+
+  # Update rate in Hz (how often to update lux and sun position)
+  update_rate: 1.0
+
+  # Gazebo sun light name
+  sun_name: "sun"
+
+  # Enable/disable cycle (if false, stays at start_time)
+  enable_cycle: true
+
+  # Start time of day (0.0 = midnight, 0.25 = sunrise, 0.5 = noon, 0.75 = sunset, 1.0 = midnight)
+  start_time: 0.5  # Start at noon
+
+  # Lux values for different lighting conditions
+  # These values are used as reference points, with smooth transitions between them
+
+  # NIGHT_DARK: < 5 lux (full darkness)
+  lux_night_dark: 1.0
+
+  # NIGHT_BRIGHT: 5-50 lux (moonlight/city lights)
+  lux_night_bright: 25.0
+
+  # DAWN: 50-300 lux (dawn/dusk)
+  lux_dawn: 150.0
+
+  # DAY_CLOUDY: 300-10,000 lux (cloudy day)
+  lux_day_cloudy: 5000.0
+
+  # DAY_SUNNY: > 10,000 lux (sunny day)
+  lux_day_sunny: 50000.0

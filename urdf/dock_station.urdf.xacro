@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dock Station URDF - Generated from SolidWorks URDF export
+  WITH CRITICAL FIXES APPLIED:
+  - Joint limits: 0.0 to 3.14 (correct, not inverted)
+  - Startup RPY: -0.0 for closed position (not -1.5662)
+  - Slow lid velocity: 0.2 (not 20)
+  - Proper lid dynamics: damping 10.0, friction 1.0 (not 10/10)
+  - Wind sensor dynamics from URDF: damping 2.0, friction 2.0
+  - Correct mesh package paths
+  - ros_control transmissions for all controlled joints
+-->
+<robot name="dock_station" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Material Definitions -->
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+
+  <material name="orange">
+    <color rgba="1.0 0.5 0.0 1.0"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+
+  <material name="red_led">
+    <color rgba="1.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="grey">
+    <color rgba="0.7 0.7 0.7 1.0"/>
+  </material>
+
+  <!-- Base Link: Dock -->
+  <link name="dock">
+    <inertial>
+      <origin xyz="1.53098380929678E-08 1.88894907528222E-09 0.1416088635467" rpy="0 0 0" />
+      <mass value="221.642063932092" />
+      <inertia
+        ixx="14.3888919832394"
+        ixy="8.11400503361738E-06"
+        ixz="2.60235410602228E-07"
+        iyy="14.4493861868399"
+        iyz="-4.60593986193422E-08"
+        izz="25.0893812892595" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/dock.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/dock.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Kapak1 Link (Left Lid) -->
+  <link name="kapak1">
+    <inertial>
+      <origin xyz="0.38071628647954 -0.0597466314752524 -5.39655762561906E-16" rpy="0 0 0" />
+      <mass value="12.7677857544327" />
+      <inertia
+        ixx="1.56961849979609"
+        ixy="0.164172475158162"
+        ixz="8.88243019103634E-16"
+        iyy="1.76053077830025"
+        iyz="2.82445628422628E-16"
+        izz="0.717480266895053" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/kapak1.STL" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/kapak1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Kapak1 Joint - FIXED: proper limits and slow velocity -->
+  <joint name="kapak1j" type="revolute">
+    <origin xyz="0 -0.38 0.04" rpy="1.57 -1.57 1.57" />
+    <parent link="dock" />
+    <child link="kapak1" />
+    <axis xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="3.14"
+      effort="20"
+      velocity="0.2" />
+    <dynamics
+      damping="10.0"
+      friction="1.0" />
+  </joint>
+
+  <!-- LED1 Link -->
+  <link name="led1">
+    <inertial>
+      <origin xyz="0.537452153064489 0.0300301151855205 0.407583283875497" rpy="0 0 0" />
+      <mass value="0.00928715134328799" />
+      <inertia
+        ixx="1.61741852200739E-06"
+        ixy="3.80021202161176E-07"
+        ixz="3.78303059399376E-07"
+        iyy="1.62433827054458E-06"
+        iyz="3.81762969515149E-07"
+        izz="1.62087839627598E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led1.STL" />
+      </geometry>
+      <material name="red_led"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="led1j" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="kapak1" />
+    <child link="led1" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- LED2 Link -->
+  <link name="led2">
+    <inertial>
+      <origin xyz="0.53745215306449 0.0300301151855202 -0.407583283875497" rpy="0 0 0" />
+      <mass value="0.00928715134328777" />
+      <inertia
+        ixx="1.61741852200734E-06"
+        ixy="3.80021202161163E-07"
+        ixz="-3.78303059399364E-07"
+        iyy="1.62433827054451E-06"
+        iyz="-3.81762969515137E-07"
+        izz="1.62087839627593E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led2.STL" />
+      </geometry>
+      <material name="red_led"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="led2j" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="kapak1" />
+    <child link="led2" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- Transmission for kapak1j -->
+  <transmission name="kapak1j_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="kapak1j">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="kapak1j_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Kapak2 Link (Right Lid) -->
+  <link name="kapak2">
+    <inertial>
+      <origin xyz="0.38071628647954 -0.0597466314752527 1.73003358513501E-16" rpy="0 0 0" />
+      <mass value="12.7677857544327" />
+      <inertia
+        ixx="1.56961849979609"
+        ixy="0.164172475158163"
+        ixz="-2.84794850048265E-16"
+        iyy="1.76053077830025"
+        iyz="-9.54792977679875E-16"
+        izz="0.717480266895053" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/kapak2.STL" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/kapak2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Kapak2 Joint - FIXED: proper limits and slow velocity -->
+  <joint name="kapak2j" type="revolute">
+    <origin xyz="0 0.38 0.04" rpy="1.5708 -1.57 -1.57" />
+    <parent link="dock" />
+    <child link="kapak2" />
+    <axis xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="3.14"
+      effort="20"
+      velocity="0.2" />
+    <dynamics
+      damping="10.0"
+      friction="1.0" />
+  </joint>
+
+  <!-- LED3 Link -->
+  <link name="led3">
+    <inertial>
+      <origin xyz="0.53745215306449 0.0300301151855201 -0.407583283875497" rpy="0 0 0" />
+      <mass value="0.00928715134328799" />
+      <inertia
+        ixx="1.61741852200739E-06"
+        ixy="3.80021202161172E-07"
+        ixz="-3.78303059399381E-07"
+        iyy="1.62433827054456E-06"
+        iyz="-3.81762969515148E-07"
+        izz="1.62087839627598E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led3.STL" />
+      </geometry>
+      <material name="red_led"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led3.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="led3j" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="kapak2" />
+    <child link="led3" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- LED4 Link -->
+  <link name="led4">
+    <inertial>
+      <origin xyz="0.53745215306449 0.0300301151855208 0.407583283875497" rpy="0 0 0" />
+      <mass value="0.00928715134328795" />
+      <inertia
+        ixx="1.61741852200738E-06"
+        ixy="3.80021202161171E-07"
+        ixz="3.78303059399377E-07"
+        iyy="1.62433827054457E-06"
+        iyz="3.81762969515146E-07"
+        izz="1.62087839627597E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led4.STL" />
+      </geometry>
+      <material name="red_led"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/led4.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="led4j" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="kapak2" />
+    <child link="led4" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+ <link name="inside_camera_link">
+    <visual>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="inside_camera_joint" type="fixed">
+    <parent link="kapak2"/>
+    <child link="inside_camera_link"/>
+    <origin xyz="0.57 0.05 0" rpy="0 0 -1.85"/>
+  </joint>
+
+  <gazebo reference="inside_camera_link">
+    <sensor type="camera" name="sim_inside_camera">
+      <update_rate>30</update_rate>
+      <camera>
+        <horizontal_fov>1.5</horizontal_fov>
+        <image>
+          <width>1024</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+      </camera>
+
+      <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+        <imageTopicName>/dock_inside/image_raw</imageTopicName>
+        <cameraInfoTopicName>/dock_inside/camera_info</cameraInfoTopicName>
+        <frameName>inside_camera_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- Transmission for kapak2j -->
+  <transmission name="kapak2j_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="kapak2j">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="kapak2j_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Wind Sensor Base Link -->
+  <link name="ruzgar_sensor_base">
+    <inertial>
+      <origin xyz="0 0.0487231579047638 0.00148310559230103" rpy="0 0 0" />
+      <mass value="1.18732993372864" />
+      <inertia
+        ixx="0.00455680543149085"
+        ixy="-9.42191344692347E-19"
+        ixz="2.1320081222918E-19"
+        iyy="0.00264545380996607"
+        iyz="5.0591248097901E-20"
+        izz="0.00455680543149085" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/ruzgar_sensor_base.STL" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/ruzgar_sensor_base.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="ruzgar_sensor_basej" type="fixed">
+    <origin xyz="0.580305884522783 -0.0658759835410427 0.31" rpy="1.56624424041562 1.5707963267949 0" />
+    <parent link="kapak2" />
+    <child link="ruzgar_sensor_base" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- Wind Direction Indicator Link -->
+  <link name="ruzgar_yon">
+    <inertial>
+      <origin xyz="0.00978231572159183 0.0811603141304763 -0.0226235754368227" rpy="0 0 0" />
+      <mass value="0.113590911898958" />
+      <inertia
+        ixx="0.000240538234297469"
+        ixy="-8.26664641782349E-06"
+        ixz="7.33071560091437E-05"
+        iyy="0.000307897528722735"
+        iyz="2.03732552183374E-05"
+        izz="8.96310134141615E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/ruzgar_yon.STL" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/ruzgar_yon.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="ruzgar_yonj" type="continuous">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="ruzgar_sensor_base" />
+    <child link="ruzgar_yon" />
+    <axis xyz="0 -0.999996729681196 0.00255746493860432" />
+    <dynamics damping="2" friction="2" />
+  </joint>
+
+  <!-- Wind Speed Indicator Link -->
+  <link name="ruzgar_hiz">
+    <inertial>
+      <origin xyz="-2.97654567660288E-10 0.162423504616449 0.00148310580928518" rpy="0 0 0" />
+      <mass value="0.19598557480847" />
+      <inertia
+        ixx="0.000488176996259168"
+        ixy="2.97200230206971E-13"
+        ixz="-3.52053096455437E-12"
+        iyy="0.000857473774358662"
+        iyz="-6.05402790730509E-13"
+        izz="0.000488177000674045" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/ruzgar_hiz.STL" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/ruzgar_hiz.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="ruzgar_hizj" type="continuous">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="ruzgar_sensor_base" />
+    <child link="ruzgar_hiz" />
+    <axis xyz="0 -0.999996729681196 0.00255746493860432" />
+    <dynamics damping="2" friction="2" />
+  </joint>
+
+  <!-- Transmission for ruzgar_hizj (wind speed control) -->
+  <transmission name="ruzgar_hizj_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ruzgar_hizj">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="ruzgar_hizj_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Arico Link (Bee Entrance) -->
+  <link name="arico">
+    <inertial>
+      <origin xyz="0.00459183673469364 -0.00357142857142857 0.3005" rpy="0 0 0" />
+      <mass value="0.122402" />
+      <inertia
+        ixx="0.00185904326220213"
+        ixy="-4.30506382978722E-05"
+        ixz="2.42389469141833E-21"
+        iyy="0.00184343076220213"
+        iyz="1.13233724857214E-19"
+        izz="0.00370245362407093" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/arico.STL" />
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/arico.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="aricoj" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="dock" />
+    <child link="arico" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- Aricobeyaz Link (White Bee Entrance Cover) -->
+  <link name="aricobeyaz">
+    <inertial>
+      <origin xyz="-0.0150000000000002 0.0116666666666667 0.3005" rpy="0 0 0" />
+      <mass value="0.03747" />
+      <inertia
+        ixx="2.96548675E-05"
+        ixy="6.24500000000001E-06"
+        ixz="-3.87180301601606E-22"
+        iyy="2.02873675E-05"
+        iyz="1.81351409246187E-21"
+        izz="4.99359900000001E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/aricobeyaz.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dock_station_sim/models/new_dock_station/meshes/aricobeyaz.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="aricobeyazj" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="dock" />
+    <child link="aricobeyaz" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- Gazebo Material Properties -->
+  <gazebo reference="dock">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="kapak1">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="kapak2">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="led1">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="led2">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="led3">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="led4">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="ruzgar_sensor_base">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="ruzgar_yon">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="ruzgar_hiz">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="arico">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="aricobeyaz">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Gazebo ros_control Plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/dock_station</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+
+</robot>

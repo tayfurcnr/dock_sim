@@ -1,0 +1,22 @@
+# Dock Station Configuration
+# Controls the movement parameters for the revolute (hinge) dock covers
+# All position values are in RADIANS (not meters) for revolute joints
+
+dock_station:
+  # Movement positions (in radians for revolute joints)
+  open_position: 1.57     # ~90 degrees - fully open (vertical)
+  closed_position: 0    # Slightly negative to close the gap between lids
+
+  # Movement directios (for mirrored joints)
+  # If lids open in opposite directions, one may need -1.0
+  left_direction: 1.0         # kapak1j direction (1.0 = normal, -1.0 = reverse)
+  right_direction: 1.0        # kapak2j direction (same as kapak1j - test if both move)
+
+  # Position tolerance for state detection (in radians)
+  position_tolerance: 0.0    # How close to target before considering "arrived" (~3 degrees)
+
+  # Timeout for operations (in seconds)
+  timeout: 30.0               # Maximum time to wait for movement completion
+
+  # Update rate
+  control_rate: 10            # Hz - how often to publish state updates

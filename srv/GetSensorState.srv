@@ -1,0 +1,7 @@
+# Query current sensor simulation state
+# No request parameters needed
+---
+bool success
+string mode              # Current mode: "realistic", "static", or "test"
+float32 simulation_time  # Current simulation time offset (seconds)
+string[] active_events   # List of active weather events

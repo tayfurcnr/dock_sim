@@ -1,0 +1,65 @@
+sensor_simulation:
+  # General settings
+  publish_rate: 1.0              # Hz (as per telemetry spec)
+  source_id: "dock_station_001"  # Identifier for this dock
+
+  # Location (static GPS coordinates)
+  location:
+    latitude: 40.7128             # degrees North
+    longitude: -74.0060           # degrees West (New York area)
+    altitude: 10.0                # meters above sea level
+
+  # Network simulation
+  network:
+    ip_address: "192.168.1.100"
+    online: true                  # Always online in simulation
+
+  # Environmental base values
+  environment:
+    temperature:
+      base: 20.0                  # Celsius
+      daily_amplitude: 8.0        # Daily temperature swing
+      noise_std: 0.5              # Standard deviation of noise
+      min: 10.0
+      max: 40.0
+
+    humidity:
+      base: 60.0                  # Percent
+      temp_correlation: -0.5      # Inverse correlation with temp
+      noise_std: 0.5
+      min: 20.0
+      max: 95.0
+
+    pressure:
+      base: 1013.25               # hPa (standard atmospheric)
+      noise_std: 0.2
+      min: 980.0
+      max: 1030.0
+
+    light:
+      max_lux: 100000             # Bright sunny day
+      night_lux: 0
+      cloud_variation: 0.3        # 30% min cloud cover
+
+  # Wind parameters
+  wind:
+    mean_speed: 5.0               # m/s
+    reversion_rate: 0.1           # Ornstein-Uhlenbeck theta
+    speed_std: 2.0
+    max_speed: 25.0
+    direction_std: 5.0            # degrees per update
+
+  # Rain parameters
+  rain:
+    transition_probability: 0.001 # 0.1% chance per update
+    mean_duration: 1800           # seconds (30 minutes)
+    light_intensity: [0.5, 2.5]   # [min, max] mm/hr
+    moderate_intensity: [2.5, 10.0]
+    heavy_intensity: [10.0, 50.0]
+    light_probability: 0.70
+    moderate_probability: 0.20
+    heavy_probability: 0.10
+
+  # Simulation modes
+  mode: "realistic"               # "realistic", "static", "test"
+  time_scale: 1.0                 # Speed up/slow down time (1.0 = real-time)

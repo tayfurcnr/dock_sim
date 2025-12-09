@@ -1,0 +1,17 @@
+# GUI Framework
+PyQt5>=5.15.0
+PyQtWebEngine>=5.15.0  # Required for map display (Leaflet.js via CDN)
+
+# Configuration
+PyYAML>=5.4.0
+
+# Text-to-Speech (Windows)
+pyttsx3>=2.90
+
+# System TTS (Linux/Ubuntu - install via apt)
+# sudo apt-get install espeak libttspico-utils alsa-utils festival
+
+# ROS Dependencies (install via rosdep)
+# rospy
+# std_msgs
+# std_srvs

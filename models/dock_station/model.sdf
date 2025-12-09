@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="dock_station">
+    <static>false</static>
+
+    <!-- Base -->
+    <link name="base">
+      <visual name="base_visual">
+        <geometry>
+          <mesh><uri>model://dock_station/meshes/dock_base.stl</uri></mesh>
+        </geometry>
+      </visual>
+      <collision name="base_collision">
+        <geometry>
+          <mesh><uri>model://dock_station/meshes/dock_base.stl</uri></mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Left Cover -->
+    <link name="top_left">
+      <visual name="top_left_visual">
+        <geometry>
+          <mesh><uri>model://dock_station/meshes/dock_top_left.stl</uri></mesh>
+        </geometry>
+      </visual>
+      <collision name="top_left_collision">
+        <geometry>
+          <mesh><uri>model://dock_station/meshes/dock_top_left.stl</uri></mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Right Cover -->
+    <link name="top_right">
+      <visual name="top_right_visual">
+        <geometry>
+          <mesh><uri>model://dock_station/meshes/dock_top_right.stl</uri></mesh>
+        </geometry>
+      </visual>
+      <collision name="top_right_collision">
+        <geometry>
+          <mesh><uri>model://dock_station/meshes/dock_top_right.stl</uri></mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Left cover linear joint -->
+    <joint name="left_slider" type="prismatic">
+      <parent>base</parent>
+      <child>top_left</child>
+      <axis>
+        <xyz>0 1 0</xyz> <!-- slide along Y -->
+        <limit>
+          <lower>0</lower>
+          <upper>0.2</upper> <!-- move 20cm, adjust if needed -->
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- Right cover linear joint -->
+    <joint name="right_slider" type="prismatic">
+      <parent>base</parent>
+      <child>top_right</child>
+      <axis>
+        <xyz>0 -1 0</xyz> <!-- slide along Y opposite -->
+        <limit>
+          <lower>0</lower>
+          <upper>0.2</upper>
+        </limit>
+      </axis>
+    </joint>
+
+  </model>
+</sdf>

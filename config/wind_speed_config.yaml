@@ -1,0 +1,19 @@
+# Wind Speed Indicator Controller Configuration
+# Controls rotation of ruzgar_hiz joint based on real-time wind speed data
+
+wind_speed_indicator:
+  # Scaling factor: angular velocity (rad/s) = wind speed (m/s) * scale_factor
+  # Example: 10 m/s wind speed with 0.5 scale = 5 rad/s rotation (~47 RPM)
+  velocity_scale_factor: 0.5  # rad/s per m/s
+
+  # Maximum rotation speed in rad/s
+  # Prevents unrealistic spinning in extreme wind conditions
+  max_velocity: 10.0
+
+  # Minimum rotation speed in rad/s
+  # Indicator will be stationary when wind speed is zero or very low
+  min_velocity: 0.0
+
+  # Control loop update rate in Hz
+  # How often velocity commands are published to the controller
+  update_rate: 10

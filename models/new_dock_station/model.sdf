@@ -1,0 +1,462 @@
+<sdf version='1.7'>
+  <model name='dock_urdf'>
+    <link name='dock'>
+      <inertial>
+        <pose>0 0 0.141723 0 -0 0</pose>
+        <mass>221.802</mass>
+        <inertia>
+          <ixx>14.3948</ixx>
+          <ixy>-2.01271e-05</ixy>
+          <ixz>2.60624e-07</ixz>
+          <iyy>14.4553</iyy>
+          <iyz>-4.60114e-08</iyz>
+          <izz>25.0932</izz>
+        </inertia>
+      </inertial>
+      <collision name='dock_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/dock.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='dock_fixed_joint_lump__aricobeyaz_collision_1'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/aricobeyaz.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='dock_fixed_joint_lump__arico_collision_2'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/arico.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='dock_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/dock.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>1 1 1 1</specular>
+        </material>
+      </visual>
+      <visual name='dock_fixed_joint_lump__aricobeyaz_visual_1'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/aricobeyaz.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <visual name='dock_fixed_joint_lump__arico_visual_2'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/arico.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+    <joint name='kapak1j' type='revolute'>
+      <pose relative_to='dock'>0 -0.38 0.04 1.57 -1.57 1.57</pose>
+      <parent>dock</parent>
+      <child>kapak1</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>3.14</upper>
+          <effort>20</effort>
+          <velocity>20</velocity>
+        </limit>
+        <dynamics>
+          <damping>10</damping>
+          <friction>10</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='kapak1'>
+      <pose relative_to='kapak1j'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.380944 -0.059616 -0 0 -0 0</pose>
+        <mass>12.7864</mass>
+        <inertia>
+          <ixx>1.57286</ixx>
+          <ixy>0.163912</ixy>
+          <ixz>8.76216e-16</ixz>
+          <iyy>1.76408</iyy>
+          <iyz>2.72405e-16</iyz>
+          <izz>0.718089</izz>
+        </inertia>
+      </inertial>
+      <collision name='kapak1_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/kapak1.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='kapak1_fixed_joint_lump__led1_collision_1'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led1.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='kapak1_fixed_joint_lump__led2_collision_2'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led2.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='kapak1_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/kapak1.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0.5 0 1</ambient>
+          <diffuse>1 0.5 0 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+      <visual name='kapak1_fixed_joint_lump__led1_visual_1'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led1.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <emissive>0.3 0 0 1</emissive>
+        </material>
+      </visual>
+      <visual name='kapak1_fixed_joint_lump__led2_visual_2'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led2.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <emissive>0.3 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+    <joint name='kapak2j' type='revolute'>
+      <pose relative_to='dock'>0 0.38 0.04 1.570 -1.57 -1.57</pose>
+      <parent>dock</parent>
+      <child>kapak2</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>3.14</upper>
+          <effort>20</effort>
+          <velocity>20</velocity>
+        </limit>
+        <dynamics>
+          <damping>10</damping>
+          <friction>10</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='kapak2'>
+      <pose relative_to='kapak2j'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.402024 -0.060255 0.02634 0 -0 0</pose>
+        <mass>13.9737</mass>
+        <inertia>
+          <ixx>1.67997</ixx>
+          <ixy>0.165931</ixy>
+          <ixz>-0.0835566</ixz>
+          <iyy>1.93991</iyy>
+          <iyz>0.00253308</iyz>
+          <izz>0.789577</izz>
+        </inertia>
+      </inertial>
+      <collision name='kapak2_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/kapak2.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='kapak2_fixed_joint_lump__led3_collision_1'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led3.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='kapak2_fixed_joint_lump__led4_collision_2'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led4.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='kapak2_fixed_joint_lump__ruzgar_sensor_base_collision_3'>
+        <pose>0.580306 -0.065876 0.31 1.56624 1.5708 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/ruzgar_sensor_base.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='kapak2_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/kapak2.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0.5 0 1</ambient>
+          <diffuse>1 0.5 0 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+      <visual name='kapak2_fixed_joint_lump__led3_visual_1'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led3.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <emissive>0.3 0 0 1</emissive>
+        </material>
+      </visual>
+      <visual name='kapak2_fixed_joint_lump__led4_visual_2'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/led4.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <emissive>0.3 0 0 1</emissive>
+        </material>
+      </visual>
+      <visual name='kapak2_fixed_joint_lump__ruzgar_sensor_base_visual_3'>
+        <pose>0.580306 -0.065876 0.31 1.56624 1.5708 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/ruzgar_sensor_base.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0.5 0 1</ambient>
+          <diffuse>1 0.5 0 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+    </link>
+    <joint name='ruzgar_hizj' type='revolute'>
+      <pose relative_to='kapak2'>0.580306 -0.065876 0.31 1.56624 1.5708 0</pose>
+      <parent>kapak2</parent>
+      <child>ruzgar_hiz</child>
+      <axis>
+        <xyz>0 -0.999997 0.002557</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>2</damping>
+          <friction>2</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='ruzgar_hiz'>
+      <pose relative_to='ruzgar_hizj'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0 0.162424 0.001483 0 -0 0</pose>
+        <mass>0.195986</mass>
+        <inertia>
+          <ixx>0.000488177</ixx>
+          <ixy>2.972e-13</ixy>
+          <ixz>-3.52053e-12</ixz>
+          <iyy>0.000857474</iyy>
+          <iyz>-6.05403e-13</iyz>
+          <izz>0.000488177</izz>
+        </inertia>
+      </inertial>
+      <collision name='ruzgar_hiz_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/ruzgar_hiz.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='ruzgar_hiz_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/ruzgar_hiz.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0.5 0 1</ambient>
+          <diffuse>1 0.5 0 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+    </link>
+    <joint name='ruzgar_yonj' type='revolute'>
+      <pose relative_to='kapak2'>0.580306 -0.065876 0.31 1.56624 1.5708 0</pose>
+      <parent>kapak2</parent>
+      <child>ruzgar_yon</child>
+      <axis>
+        <xyz>0 -0.999997 0.002557</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>2</damping>
+          <friction>2</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='ruzgar_yon'>
+      <pose relative_to='ruzgar_yonj'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.009782 0.08116 -0.022624 0 -0 0</pose>
+        <mass>0.113591</mass>
+        <inertia>
+          <ixx>0.000240538</ixx>
+          <ixy>-8.26665e-06</ixy>
+          <ixz>7.33072e-05</ixz>
+          <iyy>0.000307898</iyy>
+          <iyz>2.03733e-05</iyz>
+          <izz>8.9631e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='ruzgar_yon_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/ruzgar_yon.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='ruzgar_yon_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://dock_urdf/meshes/ruzgar_yon.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0.5 0 1</ambient>
+          <diffuse>1 0.5 0 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+    </link>
+    <frame name='aricobeyazj' attached_to='dock'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='aricobeyaz' attached_to='aricobeyazj'/>
+    <frame name='aricoj' attached_to='dock'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='arico' attached_to='aricoj'/>
+    <frame name='led1j' attached_to='kapak1'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='led1' attached_to='led1j'/>
+    <frame name='led2j' attached_to='kapak1'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='led2' attached_to='led2j'/>
+    <frame name='led3j' attached_to='kapak2'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='led3' attached_to='led3j'/>
+    <frame name='led4j' attached_to='kapak2'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='led4' attached_to='led4j'/>
+    <frame name='ruzgar_sensor_basej' attached_to='kapak2'>
+      <pose>0.580306 -0.065876 0.31 -1.57535 1.57079 3.14159</pose>
+    </frame>
+    <frame name='ruzgar_sensor_base' attached_to='ruzgar_sensor_basej'/>
+  </model>
+</sdf>

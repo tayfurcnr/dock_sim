@@ -1,0 +1,9 @@
+# Set base environmental parameters
+# Use -1 for any parameter to indicate "no change"
+float32 temperature      # Base temperature (°C), -1 = no change
+float32 humidity         # Base humidity (%), -1 = no change
+float32 pressure         # Base pressure (hPa), -1 = no change
+int32 light              # Base light (lux), -1 = no change
+---
+bool success
+string message

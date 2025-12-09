@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="dock_urdf">
+  <link
+    name="dock">
+    <inertial>
+      <origin
+        xyz="1.53098380929678E-08 1.88894907528222E-09 0.1416088635467"
+        rpy="0 0 0" />
+      <mass
+        value="221.642063932092" />
+      <inertia
+        ixx="14.3888919832394"
+        ixy="8.11400503361738E-06"
+        ixz="2.60235410602228E-07"
+        iyy="14.4493861868399"
+        iyz="-4.60593986193422E-08"
+        izz="25.0893812892595" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/dock.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/dock.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="kapak1">
+    <inertial>
+      <origin
+        xyz="0.38071628647954 -0.0597466314752524 -5.39655762561906E-16"
+        rpy="0 0 0" />
+      <mass
+        value="12.7677857544327" />
+      <inertia
+        ixx="1.56961849979609"
+        ixy="0.164172475158162"
+        ixz="8.88243019103634E-16"
+        iyy="1.76053077830025"
+        iyz="2.82445628422628E-16"
+        izz="0.717480266895053" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/kapak1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/kapak1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="kapak1j"
+    type="revolute">
+    <origin
+      xyz="0 -0.38 0.04"
+      rpy="1.5708 -1.5662 1.5708" />
+    <parent
+      link="dock" />
+    <child
+      link="kapak1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="3.14"
+      effort="20"
+      velocity="20" />
+    <dynamics
+      damping="10"
+      friction="10" />
+  </joint>
+  <link
+    name="led1">
+    <inertial>
+      <origin
+        xyz="0.537452153064489 0.0300301151855205 0.407583283875497"
+        rpy="0 0 0" />
+      <mass
+        value="0.00928715134328799" />
+      <inertia
+        ixx="1.61741852200739E-06"
+        ixy="3.80021202161176E-07"
+        ixz="3.78303059399376E-07"
+        iyy="1.62433827054458E-06"
+        iyz="3.81762969515149E-07"
+        izz="1.62087839627598E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="led1j"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="kapak1" />
+    <child
+      link="led1" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="led2">
+    <inertial>
+      <origin
+        xyz="0.53745215306449 0.0300301151855202 -0.407583283875497"
+        rpy="0 0 0" />
+      <mass
+        value="0.00928715134328777" />
+      <inertia
+        ixx="1.61741852200734E-06"
+        ixy="3.80021202161163E-07"
+        ixz="-3.78303059399364E-07"
+        iyy="1.62433827054451E-06"
+        iyz="-3.81762969515137E-07"
+        izz="1.62087839627593E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="led2j"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="kapak1" />
+    <child
+      link="led2" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="kapak2">
+    <inertial>
+      <origin
+        xyz="0.38071628647954 -0.0597466314752527 1.73003358513501E-16"
+        rpy="0 0 0" />
+      <mass
+        value="12.7677857544327" />
+      <inertia
+        ixx="1.56961849979609"
+        ixy="0.164172475158163"
+        ixz="-2.84794850048265E-16"
+        iyy="1.76053077830025"
+        iyz="-9.54792977679875E-16"
+        izz="0.717480266895053" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/kapak2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/kapak2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="kapak2j"
+    type="revolute">
+    <origin
+      xyz="0 0.38 0.04"
+      rpy="1.5708 -1.5662 -1.5708" />
+    <parent
+      link="dock" />
+    <child
+      link="kapak2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="3.14"
+      effort="20"
+      velocity="20" />
+    <dynamics
+      damping="10"
+      friction="10" />
+  </joint>
+  <link
+    name="led3">
+    <inertial>
+      <origin
+        xyz="0.53745215306449 0.0300301151855201 -0.407583283875497"
+        rpy="0 0 0" />
+      <mass
+        value="0.00928715134328799" />
+      <inertia
+        ixx="1.61741852200739E-06"
+        ixy="3.80021202161172E-07"
+        ixz="-3.78303059399381E-07"
+        iyy="1.62433827054456E-06"
+        iyz="-3.81762969515148E-07"
+        izz="1.62087839627598E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="led3j"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="kapak2" />
+    <child
+      link="led3" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="led4">
+    <inertial>
+      <origin
+        xyz="0.53745215306449 0.0300301151855208 0.407583283875497"
+        rpy="0 0 0" />
+      <mass
+        value="0.00928715134328795" />
+      <inertia
+        ixx="1.61741852200738E-06"
+        ixy="3.80021202161171E-07"
+        ixz="3.78303059399377E-07"
+        iyy="1.62433827054457E-06"
+        iyz="3.81762969515146E-07"
+        izz="1.62087839627597E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/led4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="led4j"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="kapak2" />
+    <child
+      link="led4" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="ruzgar_sensor_base">
+    <inertial>
+      <origin
+        xyz="0 0.0487231579047638 0.00148310559230103"
+        rpy="0 0 0" />
+      <mass
+        value="1.18732993372864" />
+      <inertia
+        ixx="0.00455680543149085"
+        ixy="-9.42191344692347E-19"
+        ixz="2.1320081222918E-19"
+        iyy="0.00264545380996607"
+        iyz="5.0591248097901E-20"
+        izz="0.00455680543149085" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/ruzgar_sensor_base.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/ruzgar_sensor_base.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ruzgar_sensor_basej"
+    type="fixed">
+    <origin
+      xyz="0.580305884522783 -0.0658759835410427 0.31"
+      rpy="1.56624424041562 1.5707963267949 0" />
+    <parent
+      link="kapak2" />
+    <child
+      link="ruzgar_sensor_base" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="ruzgar_yon">
+    <inertial>
+      <origin
+        xyz="0.00978231572159183 0.0811603141304763 -0.0226235754368227"
+        rpy="0 0 0" />
+      <mass
+        value="0.113590911898958" />
+      <inertia
+        ixx="0.000240538234297469"
+        ixy="-8.26664641782349E-06"
+        ixz="7.33071560091437E-05"
+        iyy="0.000307897528722735"
+        iyz="2.03732552183374E-05"
+        izz="8.96310134141615E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/ruzgar_yon.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/ruzgar_yon.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ruzgar_yonj"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="ruzgar_sensor_base" />
+    <child
+      link="ruzgar_yon" />
+    <axis
+      xyz="0 -0.999996729681196 0.00255746493860432" />
+    <dynamics
+      damping="2"
+      friction="2" />
+  </joint>
+  <link
+    name="ruzgar_hiz">
+    <inertial>
+      <origin
+        xyz="-2.97654567660288E-10 0.162423504616449 0.00148310580928518"
+        rpy="0 0 0" />
+      <mass
+        value="0.19598557480847" />
+      <inertia
+        ixx="0.000488176996259168"
+        ixy="2.97200230206971E-13"
+        ixz="-3.52053096455437E-12"
+        iyy="0.000857473774358662"
+        iyz="-6.05402790730509E-13"
+        izz="0.000488177000674045" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/ruzgar_hiz.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/ruzgar_hiz.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ruzgar_hizj"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="ruzgar_sensor_base" />
+    <child
+      link="ruzgar_hiz" />
+    <axis
+      xyz="0 -0.999996729681196 0.00255746493860432" />
+    <dynamics
+      damping="2"
+      friction="2" />
+  </joint>
+  <link
+    name="arico">
+    <inertial>
+      <origin
+        xyz="0.00459183673469364 -0.00357142857142857 0.3005"
+        rpy="0 0 0" />
+      <mass
+        value="0.122402" />
+      <inertia
+        ixx="0.00185904326220213"
+        ixy="-4.30506382978722E-05"
+        ixz="2.42389469141833E-21"
+        iyy="0.00184343076220213"
+        iyz="1.13233724857214E-19"
+        izz="0.00370245362407093" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/arico.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/arico.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="aricoj"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="dock" />
+    <child
+      link="arico" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="aricobeyaz">
+    <inertial>
+      <origin
+        xyz="-0.0150000000000002 0.0116666666666667 0.3005"
+        rpy="0 0 0" />
+      <mass
+        value="0.03747" />
+      <inertia
+        ixx="2.96548675E-05"
+        ixy="6.24500000000001E-06"
+        ixz="-3.87180301601606E-22"
+        iyy="2.02873675E-05"
+        iyz="1.81351409246187E-21"
+        izz="4.99359900000001E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/aricobeyaz.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dock_urdf/meshes/aricobeyaz.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="aricobeyazj"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="dock" />
+    <child
+      link="aricobeyaz" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

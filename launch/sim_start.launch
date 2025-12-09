@@ -1,0 +1,101 @@
+<launch>
+  <!-- Set Gazebo environment -->
+  <env name="GAZEBO_MODEL_PATH" value="$(find dock_station_sim)/models" />
+
+  <!-- Launch Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find dock_station_sim)/worlds/iris_arducopter_runway.world" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+
+<node name="spawn_sdf_model" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-sdf -file $(find dock_station_sim)/models/iris_with_ardupilot/model.sdf -model iris_demo -x 0 -y 0 -z 0.7" />
+
+  <!-- ============================================================ -->
+  <!-- OLD DOCK STATION - COMMENTED OUT                             -->
+  <!-- ============================================================ -->
+  <!--
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find dock_station_sim)/urdf/dock_station.urdf.xacro'" />
+
+  <node name="spawn_dock_station" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -param robot_description -model dock_station -x 0 -y 0 -z 0" />
+
+  <rosparam file="$(find dock_station_sim)/config/dock_station_control.yaml" command="load"/>
+
+  <node name="dock_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/dock_station"
+        args="joint_state_controller
+              left_slider_position_controller
+              right_slider_position_controller"/>
+
+  <rosparam file="$(find dock_station_sim)/config/dock_config.yaml" command="load" ns="dock_control_action_server"/>
+
+  <node name="dock_control_action_server" pkg="dock_station_sim" type="dock_control_action_server.py" output="screen"/>
+  -->
+
+  <!-- ============================================================ -->
+  <!-- DOCK STATION SETUP                                           -->
+  <!-- ============================================================ -->
+
+  <!-- Load dock station URDF -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find dock_station_sim)/urdf/dock_station.urdf.xacro'" />
+
+  <!-- Spawn dock station -->
+  <node name="spawn_dock_station" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -param robot_description -model dock_station -x 0 -y 0 -z 0" />
+
+  <!-- Load controller configuration -->
+  <rosparam file="$(find dock_station_sim)/config/dock_station_control.yaml" command="load"/>
+
+  <!-- Spawn controllers -->
+  <node name="dock_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/dock_station"
+        args="joint_state_controller
+              kapak1j_position_controller
+              kapak2j_position_controller
+              ruzgar_hizj_position_controller"/>
+
+  <!-- Load dock configuration -->
+  <rosparam file="$(find dock_station_sim)/config/dock_config.yaml" command="load" ns="dock_control_action_server"/>
+
+  <!-- Dock control action server -->
+  <node name="dock_control_action_server" pkg="dock_station_sim" type="dock_control_action_server.py" output="screen"/>
+
+  <!-- Load wind speed indicator controller configuration -->
+  <rosparam file="$(find dock_station_sim)/config/wind_speed_config.yaml" command="load" ns="wind_speed_controller"/>
+
+  <!-- Wind speed indicator controller -->
+  <node name="wind_speed_controller" pkg="dock_station_sim" type="wind_speed_controller.py" output="screen"/>
+
+  <!-- Load sensor simulation configuration -->
+  <rosparam file="$(find dock_station_sim)/config/sensor_sim_config.yaml" command="load" ns="sensor_telemetry_simulator"/>
+
+  <!-- Sensor telemetry simulator -->
+  <node name="sensor_telemetry_simulator" pkg="dock_station_sim" type="sensor_telemetry_simulator.py" output="screen"/>
+
+  <!-- Load day/night cycle configuration -->
+  <rosparam file="$(find dock_station_sim)/config/day_night_config.yaml" command="load" ns="day_night_cycle_simulator"/>
+
+  <!-- Day/Night cycle simulator -->
+  <node name="day_night_cycle_simulator" pkg="dock_station_sim" type="day_night_cycle_simulator.py" output="screen"/>
+
+  <!-- Dock Station Control Panel UI -->
+  <node name="dock_ui" pkg="dock_station_sim" type="run_ui.py" output="screen" launch-prefix="bash -c 'sleep 3; $0 $@'" />
+
+  <!-- Run ArduPilot SITL -->
+  <node name="sitl" pkg="dock_station_sim" type="sitl_launcher.sh" output="screen" />
+
+  <!-- MAVROS to communicate with ArduPilot -->
+  <node name="mavros" pkg="mavros" type="mavros_node" output="screen">
+    <param name="fcu_url" value="udp://:14540@localhost:14557" />
+    <param name="gcs_url" value="" />
+    <param name="target_system_id" value="1" />
+    <param name="target_component_id" value="1" />
+    <rosparam command="load" file="$(find mavros)/launch/apm_config.yaml" />
+  </node>
+
+</launch>
