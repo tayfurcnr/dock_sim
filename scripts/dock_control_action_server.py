@@ -32,6 +32,14 @@ class DockControlActionServer:
             Float64,
             queue_size=10
         )
+        
+        # Publisher for lid state (for UI)
+        self.lid_state_pub = rospy.Publisher(
+            '/dock/rx/devices/telemetry/lid',
+            Lid,
+            queue_size=10,
+            latch=True
+        )
 
         # Subscriber for joint states
         self.joint_state_sub = rospy.Subscriber(
@@ -154,7 +162,10 @@ class DockControlActionServer:
         result.lid = lid_msg
         result.message = message
 
-        if result.success:
+        # Check if goal was preempted
+        if self.action_server.is_preempt_requested():
+            self.action_server.set_preempted(result)
+        elif result.success:
             self.action_server.set_succeeded(result)
         else:
             self.action_server.set_aborted(result)
@@ -167,6 +178,10 @@ class DockControlActionServer:
 
         with self.lock:
             self.current_state = Lid.STATE_OPENING
+        
+        # Publish opening state to UI
+        opening_msg = Lid(state=Lid.STATE_OPENING, percentage=0, ts=self.get_iso_timestamp())
+        self.lid_state_pub.publish(opening_msg)
 
         # Send position commands with direction multipliers
         kapak1_target = self.OPEN_POSITION * self.LEFT_DIRECTION
@@ -186,13 +201,19 @@ class DockControlActionServer:
         with self.lock:
             if self.stop_requested:
                 self.current_state = Lid.STATE_STOPPED
-                return True, Lid(state=Lid.STATE_STOPPED, percentage=-1, ts=self.get_iso_timestamp()), "Lid opening stopped"
+                lid_msg = Lid(state=Lid.STATE_STOPPED, percentage=-1, ts=self.get_iso_timestamp())
+                self.lid_state_pub.publish(lid_msg)
+                return True, lid_msg, "Lid opening stopped"
             elif success:
                 self.current_state = Lid.STATE_OPEN
-                return True, Lid(state=Lid.STATE_OPEN, percentage=100, ts=self.get_iso_timestamp()), "Lid opened successfully"
+                lid_msg = Lid(state=Lid.STATE_OPEN, percentage=100, ts=self.get_iso_timestamp())
+                self.lid_state_pub.publish(lid_msg)
+                return True, lid_msg, "Lid opened successfully"
             else:
                 self.current_state = Lid.STATE_OPEN
-                return False, Lid(state=Lid.STATE_OPEN, percentage=-1, ts=self.get_iso_timestamp()), "Timeout but may have reached position"
+                lid_msg = Lid(state=Lid.STATE_OPEN, percentage=-1, ts=self.get_iso_timestamp())
+                self.lid_state_pub.publish(lid_msg)
+                return False, lid_msg, "Timeout but may have reached position"
 
     def execute_close(self, goal):
         """Execute CLOSE command."""
@@ -200,6 +221,10 @@ class DockControlActionServer:
 
         with self.lock:
             self.current_state = Lid.STATE_CLOSING
+        
+        # Publish closing state to UI
+        closing_msg = Lid(state=Lid.STATE_CLOSING, percentage=100, ts=self.get_iso_timestamp())
+        self.lid_state_pub.publish(closing_msg)
 
         # Send position commands with direction multipliers
         kapak1_target = self.CLOSED_POSITION * self.LEFT_DIRECTION
@@ -219,13 +244,19 @@ class DockControlActionServer:
         with self.lock:
             if self.stop_requested:
                 self.current_state = Lid.STATE_STOPPED
-                return True, Lid(state=Lid.STATE_STOPPED, percentage=-1, ts=self.get_iso_timestamp()), "Lid closing stopped"
+                lid_msg = Lid(state=Lid.STATE_STOPPED, percentage=-1, ts=self.get_iso_timestamp())
+                self.lid_state_pub.publish(lid_msg)
+                return True, lid_msg, "Lid closing stopped"
             elif success:
                 self.current_state = Lid.STATE_CLOSED
-                return True, Lid(state=Lid.STATE_CLOSED, percentage=0, ts=self.get_iso_timestamp()), "Lid closed successfully"
+                lid_msg = Lid(state=Lid.STATE_CLOSED, percentage=0, ts=self.get_iso_timestamp())
+                self.lid_state_pub.publish(lid_msg)
+                return True, lid_msg, "Lid closed successfully"
             else:
                 self.current_state = Lid.STATE_CLOSED
-                return False, Lid(state=Lid.STATE_CLOSED, percentage=-1, ts=self.get_iso_timestamp()), "Timeout but may have reached position"
+                lid_msg = Lid(state=Lid.STATE_CLOSED, percentage=-1, ts=self.get_iso_timestamp())
+                self.lid_state_pub.publish(lid_msg)
+                return False, lid_msg, "Timeout but may have reached position"
 
     def execute_stop(self, goal):
         """Execute STOP command - stops current motion."""
@@ -245,8 +276,10 @@ class DockControlActionServer:
 
         with self.lock:
             self.current_state = Lid.STATE_STOPPED
-
-        return True, Lid(state=Lid.STATE_STOPPED, percentage=-1, ts=self.get_iso_timestamp()), "Lid motion stopped"
+        
+        lid_msg = Lid(state=Lid.STATE_STOPPED, percentage=-1, ts=self.get_iso_timestamp())
+        self.lid_state_pub.publish(lid_msg)
+        return True, lid_msg, "Lid motion stopped"
 
     def wait_for_position_with_feedback(self, target_kapak1, target_kapak2, state, transaction_id):
         """
@@ -325,11 +358,15 @@ class DockControlActionServer:
                 else:
                     percentage = 100
 
+                lid_msg = Lid(state=state, percentage=percentage, ts=self.get_iso_timestamp())
                 feedback = LidControlFeedback()
-                feedback.lid = Lid(state=state, percentage=percentage, ts=self.get_iso_timestamp())
+                feedback.lid = lid_msg
                 feedback.message = f"Progress: {percentage}%"
                 feedback.transaction_id = transaction_id
                 self.action_server.publish_feedback(feedback)
+                
+                # Also publish to UI topic
+                self.lid_state_pub.publish(lid_msg)
 
             rate.sleep()
 

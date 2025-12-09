@@ -298,20 +298,17 @@ class HardMMIWidget(QWidget):
         
         self.manual_status = QLabel("Manual: IDLE")
         self.manual_status.setStyleSheet("QLabel { color: #00ff00; font-size: 8pt; font-family: monospace; "
-                                        "background-color: transparent; border: none; "
-                                        "text-shadow: 0 0 3px #00ff00; }")
+                                        "background-color: transparent; border: none; }")
         status_layout.addWidget(self.manual_status)
         
         self.buzzer_status = QLabel("Buzzer: OFF")
         self.buzzer_status.setStyleSheet("QLabel { color: #00ff00; font-size: 8pt; font-family: monospace; "
-                                        "background-color: transparent; border: none; "
-                                        "text-shadow: 0 0 3px #00ff00; }")
+                                        "background-color: transparent; border: none; }")
         status_layout.addWidget(self.buzzer_status)
         
         self.network_result = QLabel("Network: idle")
         self.network_result.setStyleSheet("QLabel { color: #00ff00; font-size: 8pt; font-family: monospace; "
-                                         "background-color: transparent; "
-                                         "text-shadow: 0 0 3px #00ff00; }")
+                                         "background-color: transparent; }")
         status_layout.addWidget(self.network_result)
 
     def _make_estop_button(self):

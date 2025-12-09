@@ -8,7 +8,7 @@ os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 
 import rospy
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDockWidget
 
 if __name__ == "__main__":
     PACKAGE_ROOT = Path(__file__).resolve().parent
@@ -25,8 +25,8 @@ class TelemetryPanel(QMainWindow):
     def __init__(self, use_ros=True):
         super().__init__()
         self.setWindowTitle("Dock Station Control Panel")
-        self.setFixedSize(1350, 650)
-        self.setStyleSheet("QMainWindow { background-color: #2d2d2d; }")
+        self.resize(1350, 650)
+        self.setStyleSheet("QMainWindow { background-color: transparent; }")
         self.use_ros = use_ros
         self.telemetry = sample_telemetry()
         self._build_ui()
@@ -40,15 +40,24 @@ class TelemetryPanel(QMainWindow):
 
     def _build_ui(self):
         from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout, QPushButton, QLabel
-        central = QWidget()
-        central.setStyleSheet("QWidget { background-color: #2d2d2d; }")
         
-        main_layout = QHBoxLayout(central)
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
+        # Minimal central widget (hidden)
+        central = QWidget()
+        central.setMaximumSize(1, 1)
+        self.setCentralWidget(central)
+        self.setDockNestingEnabled(True)
+        
+        # Hide main window
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setFixedSize(1, 1)
+        self.move(-10000, -10000)  # Move off-screen
 
         self.hard_widget = HardMMIWidget()
         self.lcd_display = LCDDisplay()
+        
+        # Create dock widgets
+        self._create_hardware_dock()
+        self._create_display_dock()
         
         self.lcd_display.page_selected.connect(self._log_tab_change)
         self.hard_widget.estop_released.connect(lambda: self._handle_estop(False))
@@ -70,6 +79,13 @@ class TelemetryPanel(QMainWindow):
         )
         self.hard_widget.network_test_pressed.connect(self._run_network_test)
 
+    def _create_hardware_dock(self):
+        from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QGridLayout
+        
+        dock = QDockWidget("Hardware Control Panel", self)
+        dock.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea | Qt.TopDockWidgetArea | Qt.BottomDockWidgetArea)
+        dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
+        
         left_panel = QWidget()
         left_panel.setFixedWidth(520)
         left_panel.setStyleSheet("QWidget { background-color: #3a3a3a; }")
@@ -103,6 +119,22 @@ class TelemetryPanel(QMainWindow):
         main_left_layout.addLayout(led_row)
         main_left_layout.addLayout(button_container)
         main_left_layout.addStretch()
+        
+        dock.setWidget(left_panel)
+        self.addDockWidget(Qt.LeftDockWidgetArea, dock)
+        dock.setFloating(True)
+        dock.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.WindowMinMaxButtonsHint)
+        dock.setGeometry(50, 50, 520, 650)
+        dock.hide()  # Start hidden
+        self.hardware_dock = dock
+
+    def _create_display_dock(self):
+        from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QLabel
+        from PyQt5.QtGui import QCursor
+        
+        dock = QDockWidget("Display Panel", self)
+        dock.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea | Qt.TopDockWidgetArea | Qt.BottomDockWidgetArea)
+        dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
         
         right_panel = QWidget()
         right_panel.setStyleSheet("QWidget { background-color: #1a1a1a; }")
@@ -160,10 +192,13 @@ class TelemetryPanel(QMainWindow):
         right_layout.addLayout(nav_buttons)
         right_layout.addStretch()
         
-        main_layout.addWidget(left_panel)
-        main_layout.addWidget(right_panel)
-        
-        self.setCentralWidget(central)
+        dock.setWidget(right_panel)
+        self.addDockWidget(Qt.RightDockWidgetArea, dock)
+        dock.setFloating(True)
+        dock.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.WindowMinMaxButtonsHint)
+        dock.setGeometry(600, 50, 840, 650)
+        dock.hide()  # Start hidden
+        self.display_dock = dock
 
     def update_telemetry(self, data: dict):
         telemetry = data.get("telemetry", {})
@@ -292,6 +327,11 @@ class TelemetryPanel(QMainWindow):
 
 def main():
     import yaml
+    import signal
+    from PyQt5.QtWidgets import QSplashScreen
+    from PyQt5.QtGui import QPixmap, QPainter, QColor, QFont
+    from PyQt5.QtCore import Qt, QTimer
+    import math
     
     config_path = Path(__file__).parent / "config" / "config.yaml"
     with open(config_path) as f:
@@ -299,12 +339,151 @@ def main():
     
     use_ros = config.get('ros', {}).get('enabled', False)
     
-    if use_ros:
-        rospy.init_node('dock_station_ui', anonymous=True)
-    
     app = QApplication(sys.argv)
+    
+    # Set application icon
+    icon_path = Path(__file__).parent / "assets" / "icon.png"
+    if icon_path.exists():
+        from PyQt5.QtGui import QIcon
+        app.setWindowIcon(QIcon(str(icon_path)))
+    
+    # Professional animated splash
+    class AnimatedSplash(QSplashScreen):
+        def __init__(self):
+            pix = QPixmap(400, 200)
+            pix.fill(QColor("#0d1117"))
+            super().__init__(pix, Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
+            self.angle = 0
+            self.progress = 0
+            self.timer = QTimer()
+            self.timer.timeout.connect(self.rotate)
+            self.timer.start(50)
+        
+        def rotate(self):
+            self.angle = (self.angle + 12) % 360
+            self.repaint()
+        
+        def set_progress(self, value):
+            self.progress = value
+            self.repaint()
+        
+        def drawContents(self, painter):
+            painter.setRenderHint(QPainter.Antialiasing)
+            
+            # Border
+            painter.setPen(QColor("#17a2b8"))
+            painter.drawRect(1, 1, 398, 198)
+            
+            # Logo (if exists)
+            logo_path = Path(__file__).parent / "assets" / "icon.png"
+            if logo_path.exists():
+                from PyQt5.QtGui import QPixmap
+                logo = QPixmap(str(logo_path))
+                if not logo.isNull():
+                    scaled_logo = logo.scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                    painter.drawPixmap(20, 20, scaled_logo)
+            
+            # Title
+            painter.setFont(QFont("Arial", 16, QFont.Bold))
+            painter.setPen(QColor("#17a2b8"))
+            painter.drawText(80, 50, "DOCK STATION")
+            
+            painter.setFont(QFont("Arial", 10))
+            painter.setPen(QColor("#8b949e"))
+            painter.drawText(20, 80, "Control Panel Interface")
+            
+            # Spinner
+            for i in range(12):
+                angle = math.radians(self.angle + i * 30)
+                opacity = 1.0 - (i * 0.08)
+                color = QColor("#17a2b8")
+                color.setAlphaF(opacity)
+                painter.setBrush(color)
+                painter.setPen(Qt.NoPen)
+                cx, cy, r = 340, 60, 20
+                x = cx + r * math.cos(angle)
+                y = cy + r * math.sin(angle)
+                painter.drawEllipse(int(x-3), int(y-3), 6, 6)
+            
+            # Progress bar
+            painter.setPen(QColor("#30363d"))
+            painter.setBrush(QColor("#0d1117"))
+            painter.drawRect(20, 120, 360, 8)
+            
+            if self.progress > 0:
+                painter.setPen(Qt.NoPen)
+                painter.setBrush(QColor("#17a2b8"))
+                painter.drawRect(20, 120, int(360 * self.progress / 100), 8)
+            
+            # Message
+            painter.setFont(QFont("Arial", 9))
+            painter.setPen(QColor("#8b949e"))
+            super().drawContents(painter)
+    
+    import time
+    
+    splash = AnimatedSplash()
+    splash.show()
+    app.processEvents()
+    time.sleep(0.3)
+    
+    splash.set_progress(10)
+    splash.showMessage("  Initializing...", Qt.AlignBottom | Qt.AlignLeft, QColor("#8b949e"))
+    app.processEvents()
+    time.sleep(0.4)
+    
+    if use_ros:
+        splash.set_progress(25)
+        splash.showMessage("  Connecting to ROS...", Qt.AlignBottom | Qt.AlignLeft, QColor("#8b949e"))
+        app.processEvents()
+        time.sleep(0.3)
+        rospy.init_node('dock_station_ui', anonymous=True)
+        
+        # Ctrl+C sinyalini yakala ve Qt'yi kapat
+        def sigint_handler(*args):
+            rospy.signal_shutdown('SIGINT')
+            QApplication.quit()
+            sys.exit(0)
+        signal.signal(signal.SIGINT, sigint_handler)
+        
+        # ROS shutdown olduğunda Qt uygulamasını kapat
+        rospy.on_shutdown(lambda: QApplication.quit())
+        
+        splash.set_progress(50)
+        splash.showMessage("  Loading services...", Qt.AlignBottom | Qt.AlignLeft, QColor("#8b949e"))
+        app.processEvents()
+        time.sleep(0.4)
+    
+    splash.set_progress(75)
+    splash.showMessage("  Building interface...", Qt.AlignBottom | Qt.AlignLeft, QColor("#8b949e"))
+    app.processEvents()
+    time.sleep(0.3)
+    
     panel = TelemetryPanel(use_ros=use_ros)
-    panel.show()
+    
+    splash.set_progress(100)
+    splash.showMessage("  Ready!", Qt.AlignBottom | Qt.AlignLeft, QColor("#17a2b8"))
+    app.processEvents()
+    time.sleep(0.4)
+    
+    def show_panels():
+        # Wait a bit more for initial ROS messages if using ROS
+        if use_ros:
+            time.sleep(0.8)
+            app.processEvents()
+        
+        panel.hardware_dock.show()
+        panel.display_dock.show()
+        panel.show()
+        splash.finish(panel)
+        
+        # Timer to allow Ctrl+C to work
+        if use_ros:
+            timer = QTimer()
+            timer.timeout.connect(lambda: None)
+            timer.start(100)
+    
+    QTimer.singleShot(100, show_panels)
     
     sys.exit(app.exec_())
 

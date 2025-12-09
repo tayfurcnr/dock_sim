@@ -94,7 +94,7 @@ class ROSBridge(QObject):
                 rospy.wait_for_service(srv_config['service'], timeout=2.0)
                 self.services[name] = rospy.ServiceProxy(srv_config['service'], service_class)
             except Exception as e:
-                rospy.logwarn(f"Service '{name}' unavailable: {e}")
+                rospy.loginfo(f"Service '{name}' not ready yet, will retry on first use")
                 self.services[name] = None
     
     def _load_service_class(self, srv_type: str):
@@ -105,9 +105,8 @@ class ROSBridge(QObject):
             package, service = srv_type.split('/')
             module = import_module(f"{package}.srv")
             return getattr(module, service)
-        except Exception as e:
-            rospy.logwarn(f"Failed to load service type '{srv_type}': {e}")
-            return LidControlTrigger
+        except Exception:
+            return LidControlTrigger  # Silent fallback
     
     def call_action(self, action):
         if action not in self.config['ros']['button_actions']:
@@ -164,6 +163,14 @@ class ROSBridge(QObject):
         
         try:
             from datetime import datetime
+            from actionlib_msgs.msg import GoalStatus
+            
+            # Cancel previous goal if still active
+            state = client.get_state()
+            if state in [GoalStatus.PENDING, GoalStatus.ACTIVE, GoalStatus.PREEMPTING, GoalStatus.RECALLING]:
+                client.cancel_goal()
+                rospy.sleep(0.1)  # Brief wait for cancellation
+            
             transaction_id = f"ui_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
             ts = datetime.now().isoformat()
             
@@ -357,9 +364,8 @@ class ROSBridge(QObject):
             try:
                 rospy.wait_for_service('/dock_station/sensor_sim/set_environment', timeout=1.0)
                 self._env_service = rospy.ServiceProxy('/dock_station/sensor_sim/set_environment', SetEnvironment)
-            except Exception as e:
-                rospy.logwarn(f"Environment service unavailable: {e}")
-                self._env_service = None
+            except Exception:
+                pass  # Silent retry
         return self._env_service
     
     def _get_wind_service(self):
@@ -367,9 +373,8 @@ class ROSBridge(QObject):
             try:
                 rospy.wait_for_service('/dock_station/sensor_sim/set_wind', timeout=1.0)
                 self._wind_service = rospy.ServiceProxy('/dock_station/sensor_sim/set_wind', SetWind)
-            except Exception as e:
-                rospy.logwarn(f"Wind service unavailable: {e}")
-                self._wind_service = None
+            except Exception:
+                pass  # Silent retry
         return self._wind_service
     
     def _get_weather_event_service(self):
@@ -377,7 +382,6 @@ class ROSBridge(QObject):
             try:
                 rospy.wait_for_service('/dock_station/sensor_sim/trigger_weather_event', timeout=1.0)
                 self._weather_event_service = rospy.ServiceProxy('/dock_station/sensor_sim/trigger_weather_event', TriggerWeatherEvent)
-            except Exception as e:
-                rospy.logwarn(f"Weather event service unavailable: {e}")
-                self._weather_event_service = None
+            except Exception:
+                pass  # Silent retry
         return self._weather_event_service

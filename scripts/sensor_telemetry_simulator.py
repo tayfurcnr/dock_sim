@@ -96,6 +96,7 @@ class SensorTelemetrySimulator:
         # Lid state (synced from dock_control_server)
         self.lid_state = Lid.STATE_CLOSED
         self.lid_percentage = 0
+        self.lid_received_from_action_server = False
 
         # Simulation state
         self.start_time = time.time()
@@ -139,11 +140,11 @@ class SensorTelemetrySimulator:
             queue_size=10
         )
 
-        # Subscribe to dock control state for lid synchronization
-        self.dock_state_sub = rospy.Subscriber(
-            '/dock_station/state',
-            String,
-            self.dock_state_callback
+        # Subscribe to lid state from action server
+        self.lid_state_sub = rospy.Subscriber(
+            '/dock/rx/devices/telemetry/lid',
+            Lid,
+            self.lid_state_callback
         )
 
         # Create service servers for control interfaces
@@ -178,31 +179,29 @@ class SensorTelemetrySimulator:
         rospy.loginfo("  /dock_station/sensor_sim/set_wind")
         rospy.loginfo("  /dock_station/sensor_sim/trigger_weather_event")
         rospy.loginfo("  /dock_station/sensor_sim/get_state")
+        
+        # Wait for publishers to be ready, then publish initial state
+        rospy.sleep(0.5)
+        self._publish_initial_lid_state()
+    
+    def _publish_initial_lid_state(self):
+        """Publish initial lid state on startup."""
+        lid_msg = Lid()
+        lid_msg.state = Lid.STATE_CLOSED
+        lid_msg.percentage = 0
+        lid_msg.ts = self.get_iso_timestamp()
+        self.lid_pub.publish(lid_msg)
+        rospy.loginfo("Published initial lid state: CLOSED")
 
-    def dock_state_callback(self, msg):
+    def lid_state_callback(self, msg):
         """
-        Callback for dock control state updates.
-        Maps dock states to lid telemetry states.
-
-        According to DOCK_STATION_TELEMETRY.md, lid state should be:
-        - "OPEN": Fully open
-        - "CLOSED": Fully closed
-        - "BETWEEN": In motion (opening or closing)
+        Callback for lid state updates from action server.
+        Simply stores the received state.
         """
         with self.lock:
-            state_key = msg.data.strip().lower()
-            state_map = {
-                "open": (Lid.STATE_OPEN, 100),
-                "closed": (Lid.STATE_CLOSED, 0),
-                "opening": (Lid.STATE_OPENING, -1),
-                "closing": (Lid.STATE_CLOSING, -1),
-                "idle": (Lid.STATE_CLOSED, 0),
-                "stopped": (Lid.STATE_STOPPED, -1)
-            }
-            self.lid_state, self.lid_percentage = state_map.get(
-                state_key,
-                (Lid.STATE_UNKNOWN, -1)
-            )
+            self.lid_state = msg.state
+            self.lid_percentage = msg.percentage
+            self.lid_received_from_action_server = True
 
     def get_iso_timestamp(self):
         """Generate ISO8601 timestamp string."""
@@ -254,16 +253,14 @@ class SensorTelemetrySimulator:
         rain_msg.ts = timestamp
         self.rain_pub.publish(rain_msg)
 
-        # Lid state (from dock control)
+        # Lid state - publish only if action server hasn't started yet
         with self.lock:
-            lid_state = self.lid_state
-            lid_percentage = self.lid_percentage
-
-        lid_msg = Lid()
-        lid_msg.state = lid_state
-        lid_msg.percentage = lid_percentage
-        lid_msg.ts = timestamp
-        self.lid_pub.publish(lid_msg)
+            if not self.lid_received_from_action_server:
+                lid_msg = Lid()
+                lid_msg.state = self.lid_state
+                lid_msg.percentage = self.lid_percentage
+                lid_msg.ts = timestamp
+                self.lid_pub.publish(lid_msg)
 
         # Location (static)
         location_msg = Location()
@@ -305,7 +302,7 @@ class SensorTelemetrySimulator:
 
                 if req.light >= 0:
                     self.light_model.set_base(req.light)
-                    rospy.loginfo(f"Set light to {req.light} lux")
+                    rospy.logdebug(f"Set light to {req.light} lux")
 
             return SetEnvironmentResponse(
                 success=True,

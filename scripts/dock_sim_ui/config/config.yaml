@@ -46,7 +46,7 @@ ros:
 
   actions:
     lid_control:
-      server: "/dock/lid_control"
+      server: "/dock_station/lid_control"
       action_type: "dock_msgs/LidControlAction"
       action_path: "dock_msgs/action/control/LidControl.action"
   button_actions:

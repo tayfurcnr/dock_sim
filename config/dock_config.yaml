@@ -13,7 +13,7 @@ dock_station:
   right_direction: 1.0        # kapak2j direction (same as kapak1j - test if both move)
 
   # Position tolerance for state detection (in radians)
-  position_tolerance: 0.0    # How close to target before considering "arrived" (~3 degrees)
+  position_tolerance: 0.01    # How close to target before considering "arrived" (~3 degrees)
 
   # Timeout for operations (in seconds)
   timeout: 30.0               # Maximum time to wait for movement completion
